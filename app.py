@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, make_response, jsonify
-from models.models import Database, Alumno, Grado, Municipio, Asunto, Ticket
+from models.orm_models import Database, Alumno, Grado, Municipio, Asunto, Ticket, Login, Cargo
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy import func
 from reportlab.lib.pagesizes import letter
@@ -9,23 +9,24 @@ from io import BytesIO
 import qrcode
 from sqlalchemy.orm import joinedload
 
-
 app = Flask(__name__)
 app.secret_key = 'juannumbres12'  # Clave secreta para los mensajes flash y otras funcionalidades de seguridad
 db = Database()  # Instancia de la base de datos
 
+# Nueva ruta para el menú inicial
+@app.route('/menu_inicial', methods=['GET'])
+def menu_inicial():
+    return render_template('menu_inicial.html')
+
+# Modificar la ruta raíz para que redirija al menú inicial
+@app.route('/')
+def root():
+    return redirect(url_for('menu_inicial'))
 
 # Ruta principal para el menú de opciones
 @app.route('/menu_alumno', methods=['GET'])
 def menu_alumno():
     return render_template('menu_alumno.html')
-
-
-# Redirigir la ruta raíz al menú de alumno
-@app.route('/')
-def root():
-    return redirect(url_for('menu_alumno'))
-
 
 # Página para el registro de alumnos
 @app.route('/registrar_alumno', methods=['GET'])
@@ -39,15 +40,21 @@ def index():
     session.close()
     return render_template('register_alumno.html', grados=grados, municipios=municipios, asuntos=asuntos)
 
-
 # Verificar si el alumno ya está registrado
 @app.route('/check_alumno', methods=['POST'])
 def check_alumno():
     session = db.get_session()
 
-    nombre = request.json.get('nombre')
-    primerApe = request.json.get('primerApe')
-    segundoApe = request.json.get('segundoApe', '')
+    # Cambiar request.json a request.form
+    nombre = request.form.get('nombre')
+    primerApe = request.form.get('primerApe')
+    segundoApe = request.form.get('segundoApe', '')
+
+    # Verificar que los datos no sean None
+    if not nombre or not primerApe:
+        flash("Nombre y Primer Apellido son obligatorios.", "error")
+        session.close()
+        return redirect(url_for('index'))
 
     # Buscar si el alumno ya está registrado
     alumno_existente = session.query(Alumno).filter(
@@ -70,7 +77,6 @@ def check_alumno():
     else:
         session.close()
         return jsonify({'exists': False}), 200
-
 
 # Ruta para registrar al alumno
 @app.route('/register_alumno', methods=['POST'])
@@ -138,8 +144,9 @@ def register_alumno():
         session.add(nuevo_ticket)
         session.commit()
 
-        # Respuesta exitosa con el ID del alumno registrado
-        return jsonify({'alumno_id': alumno_id})
+        # Flash message and redirect to generate PDF
+        flash('Alumno registrado exitosamente. Se generará el PDF con el ticket.', 'success')
+        return redirect(url_for('generar_pdf', alumno_id=alumno_id))
 
     except IntegrityError:
         session.rollback()
@@ -148,12 +155,12 @@ def register_alumno():
 
     except SQLAlchemyError as e:
         session.rollback()
-        flash(f"Error al registrar el alumno o ticket: {e}", "error")
+        app.logger.error(f"Error al registrar el alumno o ticket: {e}")
+        flash("Error al registrar el alumno. Por favor, inténtelo de nuevo.", "error")
         return redirect(url_for('index'))
 
     finally:
         session.close()
-
 
 # Ruta para generar el PDF con QR
 @app.route('/generar_pdf/<int:alumno_id>')
@@ -167,6 +174,7 @@ def generar_pdf(alumno_id):
     # Si el alumno o el ticket no existen, redirigir al índice
     if not alumno or not ticket:
         flash("Error: Alumno o ticket no encontrado.", "error")
+        session.close()
         return redirect(url_for('index'))
 
     # Crear un buffer en memoria para el PDF
@@ -180,7 +188,7 @@ def generar_pdf(alumno_id):
     pdf.drawString(100, 750, f"Ticket de Registro para: {alumno.nombre} {alumno.primerApe} {alumno.segundoApe}")
     pdf.drawString(100, 730, f"Teléfono: {alumno.telefono}")
     pdf.drawString(100, 710, f"Correo: {alumno.correo}")
-    pdf.drawString(100, 690, f"CURP: {alumno.curp}")  # Añadir la CURP al PDF
+    pdf.drawString(100, 690, f"CURP: {alumno.curp if alumno.curp else 'No disponible'}")
     pdf.drawString(100, 670, f"Grado: {alumno.idGrado}")
     pdf.drawString(100, 650, f"Municipio: {alumno.idMunicipio}")
     pdf.drawString(100, 630, f"Asunto: {alumno.idAsunto}")
@@ -203,11 +211,9 @@ def generar_pdf(alumno_id):
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = f'attachment; filename="ticket_alumno_{alumno_id}.pdf"'
 
-    # Cerrar la sesión de la base de datos
     session.close()
 
     return response
-
 
 # Función para generar el código QR
 def generate_qr_code(data):
@@ -230,7 +236,6 @@ def generate_qr_code(data):
 
     return img_buffer
 
-
 # Ruta para buscar un alumno registrado y mostrar sus datos
 @app.route('/buscar_alumno', methods=['GET', 'POST'])
 def buscar_alumno():
@@ -251,17 +256,18 @@ def buscar_alumno():
         ).first()
 
         if alumno:
-            session.close()
             # Renderizar la página intermedia que muestra los datos del alumno
-            return render_template('datos_alumno.html', alumno=alumno)
+            response = render_template('datos_alumno.html', alumno=alumno)
+            session.close()
+            return response
         else:
             flash("No se encontró ningún registro con los datos proporcionados.", "error")
             session.close()
             return redirect(url_for('buscar_alumno'))
 
+    session.close()
     # Si es un GET, simplemente muestra el formulario para buscar el alumno
     return render_template('buscar_registro.html')
-
 
 # Ruta para mostrar el formulario de modificación del alumno
 @app.route('/modificar_alumno/<int:idAlumno>', methods=['GET'])
@@ -276,8 +282,9 @@ def modificar_alumno(idAlumno):
         municipios = session.query(Municipio).all()
         asuntos = session.query(Asunto).all()
 
+        response = render_template('modificar_alumno.html', alumno=alumno, grados=grados, municipios=municipios, asuntos=asuntos)
         session.close()
-        return render_template('modificar_alumno.html', alumno=alumno, grados=grados, municipios=municipios, asuntos=asuntos)
+        return response
     else:
         flash("No se encontró ningún registro para modificar.", "error")
         session.close()
@@ -325,20 +332,105 @@ def actualizar_alumno(idAlumno):
                 ticket.idMunicipio = idMunicipio  # Actualizar también el municipio en el ticket
 
             session.commit()
-            flash("Datos actualizados exitosamente.", "success")
+
+            # Flash para notificación de éxito
+            flash("Datos actualizados exitosamente. El PDF se descargará automáticamente.", "success")
+
+            # Redirigir a la ruta para generar el PDF
+            session.close()
+            return redirect(url_for('generar_pdf', alumno_id=alumno.idAlumno))
+
         else:
             flash("No se encontró el alumno a modificar.", "error")
 
     except SQLAlchemyError as e:
         session.rollback()
-        flash(f"Error al actualizar los datos: {e}", "error")
+        app.logger.error(f"Error al actualizar los datos: {e}")
+        flash("Error al actualizar los datos. Por favor, inténtelo de nuevo.", "error")
 
     finally:
         session.close()
 
     return redirect(url_for('buscar_alumno'))
 
+######## Administrador ########
+@app.route('/menu_admin')
+def menu_admin():
+    return render_template('menu_admin.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    session = db.get_session()
+
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        nombre = request.form['nombre']
+        primerAp = request.form['primerAp']
+        segundoAp = request.form['segundoAp']
+        idCargo = request.form.get('idCargo', None)
+
+        # Verificar si el email ya está registrado
+        existing_user = session.query(Login).filter_by(email=email).first()
+        if existing_user:
+            flash('El email ya está registrado.', 'danger')
+            session.close()
+            return redirect(url_for('register'))
+
+        # Crear un nuevo usuario
+        new_user = Login(
+            email=email,
+            nombre=nombre,
+            primerAp=primerAp,
+            segundoAp=segundoAp,
+            idCargo=idCargo
+        )
+        new_user.set_password(password)
+
+        try:
+            session.add(new_user)
+            session.commit()
+            flash('Usuario registrado exitosamente.', 'success')
+            session.close()
+            return redirect(url_for('login'))
+        except SQLAlchemyError as e:
+            session.rollback()
+            app.logger.error(f'Error al registrar usuario: {e}')
+            flash('Error al registrar usuario. Por favor, inténtelo de nuevo.', 'danger')
+        finally:
+            session.close()
+    else:
+        cargos = session.query(Cargo).all()  # Obtener todos los cargos para el formulario
+        session.close()
+        return render_template('register.html', cargos=cargos)
+
+# Ruta para iniciar sesión
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    session = db.get_session()
+
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        user = session.query(Login).filter_by(email=email).first()
+
+        if user and user.check_password(password):
+            flash('Inicio de sesión exitoso.', 'success')
+            session.close()
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Email o contraseña incorrectos.', 'danger')
+            session.close()
+            return redirect(url_for('login'))
+
+    session.close()
+    return render_template('login.html')
+
+# Ruta de ejemplo para el dashboard
+@app.route('/dashboard')
+def dashboard():
+    return "Bienvenido al Dashboard."
 
 if __name__ == '__main__':
     app.run(debug=True)

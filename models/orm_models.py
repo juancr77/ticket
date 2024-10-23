@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, create_engine
 from sqlalchemy.orm import relationship, sessionmaker, declarative_base
 from sqlalchemy.exc import SQLAlchemyError
+import bcrypt  # Asegúrate de importar bcrypt
 
 # Configuración de SQLAlchemy
 Base = declarative_base()
@@ -32,6 +33,24 @@ class Asunto(Base):
     idAsunto = Column(Integer, primary_key=True, autoincrement=True)
     asuntoN = Column(String(100), nullable=False)
 
+class Grado(Base):
+    __tablename__ = 'grado'
+    
+    idGrado = Column(Integer, primary_key=True, autoincrement=True)
+    gradoN = Column(String(100), nullable=False)
+
+    # Relación con Alumno
+    alumnos = relationship('Alumno', back_populates='grado')
+
+class Municipio(Base):
+    __tablename__ = 'municipio'
+    
+    idMunicipio = Column(Integer, primary_key=True, autoincrement=True)
+    nombreN = Column(String(100), nullable=False)
+
+    # Relación con Alumno
+    alumnos = relationship('Alumno', back_populates='municipio')
+
 class Alumno(Base):
     __tablename__ = 'alumno'
     
@@ -55,23 +74,11 @@ class Alumno(Base):
     # Relación con Asunto
     asunto = relationship('Asunto')
 
-class Grado(Base):
-    __tablename__ = 'grado'
+class Estatus(Base):
+    __tablename__ = 'estatus'
     
-    idGrado = Column(Integer, primary_key=True, autoincrement=True)
-    gradoN = Column(String(100), nullable=False)
-
-    # Relación con Alumno
-    alumnos = relationship('Alumno', back_populates='grado')
-
-class Municipio(Base):
-    __tablename__ = 'municipio'
-    
-    idMunicipio = Column(Integer, primary_key=True, autoincrement=True)
-    nombreN = Column(String(100), nullable=False)
-
-    # Relación con Alumno
-    alumnos = relationship('Alumno', back_populates='municipio')
+    idestatus = Column(Integer, primary_key=True, autoincrement=True)
+    detalle = Column(String(100), nullable=False)
 
 class Ticket(Base):
     __tablename__ = 'tickett'
@@ -96,8 +103,31 @@ class Ticket(Base):
     # Relación con Asunto
     asunto = relationship('Asunto')
 
-class Estatus(Base):
-    __tablename__ = 'estatus'
+class Cargo(Base):
+    __tablename__ = 'cargo'
+
+    idCargo = Column(Integer, primary_key=True, autoincrement=True)
+    cargoN = Column(String(100), nullable=False)  # Asegúrate de que el nombre de la columna coincide con tu esquema de BD
+
+    # Relación con Login
+    logins = relationship('Login', back_populates='cargo')
+
+class Login(Base):
+    __tablename__ = 'login'
     
-    idestatus = Column(Integer, primary_key=True, autoincrement=True)
-    detalle = Column(String(100), nullable=False)
+    idUser = Column(Integer, primary_key=True, autoincrement=True)
+    email = Column(String(100), nullable=False, unique=True)
+    contraseña = Column(String(100), nullable=False)
+    nombre = Column(String(100), nullable=False)
+    primerAp = Column(String(100), nullable=False)
+    segundoAp = Column(String(100), nullable=False)
+    idCargo = Column(Integer, ForeignKey('cargo.idCargo'), nullable=True)
+
+    # Relación con Cargo
+    cargo = relationship('Cargo', back_populates='logins')
+
+    def set_password(self, password):
+        self.contraseña = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    def check_password(self, password):
+        return bcrypt.checkpw(password.encode('utf-8'), self.contraseña.encode('utf-8'))
