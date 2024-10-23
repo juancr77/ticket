@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Registro de Alumnos</title>
+
+    <!-- Enlace al archivo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/style.css') }}">
+
+</head>
+<body>
+    <h1>Menú de Registro de Alumnos</h1>
+
+    <p>Elige una opción:</p>
+
+    <!-- Opción para registrar un nuevo alumno -->
+    <a href="{{ url_for('index') }}">
+        <button>Registrar Alumno</button>
+    </a>
+    <br><br>
+
+    <!-- Opción para buscar un alumno existente -->
+    <a href="{{ url_for('buscar_alumno') }}">
+        <button>Buscar Registro</button>
+    </a>
+
+</body>
+</html>

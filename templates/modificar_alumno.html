@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Registro de Alumno</title>
+
+    <!-- Enlace al archivo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/style.css') }}">
+</head>
+<body>
+    <h1>Modificar Registro de Alumno</h1>
+
+    <form action="{{ url_for('actualizar_alumno', idAlumno=alumno.idAlumno) }}" method="POST">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="{{ alumno.nombre }}" required><br><br>
+
+        <label for="primerApe">Primer Apellido:</label>
+        <input type="text" id="primerApe" name="primerApe" value="{{ alumno.primerApe }}" required><br><br>
+
+        <label for="segundoApe">Segundo Apellido:</label>
+        <input type="text" id="segundoApe" name="segundoApe" value="{{ alumno.segundoApe }}"><br><br>
+
+        <label for="telefono">Teléfono:</label>
+        <input type="tel" id="telefono" name="telefono" value="{{ alumno.telefono }}" required><br><br>
+
+        <label for="correo">Correo Electrónico:</label>
+        <input type="email" id="correo" name="correo" value="{{ alumno.correo }}" required><br><br>
+
+        <label for="grado">Grado:</label>
+        <select id="grado" name="idGrado">
+            {% for grado in grados %}
+                <option value="{{ grado.idGrado }}" {% if alumno.idGrado == grado.idGrado %}selected{% endif %}>
+                    {{ grado.gradoN }}
+                </option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="municipio">Municipio:</label>
+        <select id="municipio" name="idMunicipio">
+            {% for municipio in municipios %}
+                <option value="{{ municipio.idMunicipio }}" {% if alumno.idMunicipio == municipio.idMunicipio %}selected{% endif %}>
+                    {{ municipio.nombreN }}
+                </option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="asunto">Asunto:</label>
+        <select id="asunto" name="idAsunto">
+            {% for asunto in asuntos %}
+                <option value="{{ asunto.idAsunto }}" {% if alumno.idAsunto == asunto.idAsunto %}selected{% endif %}>
+                    {{ asunto.asuntoN }}
+                </option>
+            {% endfor %}
+        </select><br><br>
+
+        <input type="submit" value="Actualizar Alumno">
+    </form>
+
+    <br>
+
+    <!-- Botón para regresar al menú principal -->
+    <form action="{{ url_for('menu_alumno') }}" method="GET">
+        <button type="submit">Regresar al Menú</button>
+    </form>
+
+</body>
+</html>

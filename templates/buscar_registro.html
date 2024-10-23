@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Registro de Alumno</title>
+
+    <!-- Enlace al archivo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/style.css') }}">
+</head>
+<body>
+    <h1>Buscar Registro de Alumno</h1>
+
+    <!-- Mostrar mensajes flash si existen -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('buscar_alumno') }}" method="POST">
+        <label for="curp">CURP:</label>
+        <input type="text" id="curp" name="curp" required><br><br>
+
+        <label for="ordTicket">Número de Turno:</label>
+        <input type="text" id="ordTicket" name="ordTicket" required><br><br>
+
+        <input type="submit" value="Buscar Registro">
+    </form>
+
+    <br>
+
+    <!-- Botón para regresar al menú principal -->
+    <form action="{{ url_for('menu_alumno') }}" method="GET">
+        <button type="submit">Regresar al Menú</button>
+    </form>
+
+</body>
+</html>

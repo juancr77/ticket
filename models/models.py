@@ -44,7 +44,8 @@ class Alumno(Base):
     idGrado = Column(Integer, ForeignKey('grado.idGrado'), nullable=False)
     idMunicipio = Column(Integer, ForeignKey('municipio.idMunicipio'), nullable=False)
     idAsunto = Column(Integer, ForeignKey('asuntot.idAsunto'), nullable=False)
-
+    curp = Column(String(45), nullable=False)  # Nueva columna agregada
+    
     # Relación con Grado
     grado = relationship('Grado', back_populates='alumnos')
 
