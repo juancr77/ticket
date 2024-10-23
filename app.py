@@ -283,8 +283,6 @@ def modificar_alumno(idAlumno):
         session.close()
         return redirect(url_for('buscar_alumno'))
 
-
-# Ruta para actualizar los datos del alumno
 @app.route('/actualizar_alumno/<int:idAlumno>', methods=['POST'])
 def actualizar_alumno(idAlumno):
     session = db.get_session()
@@ -304,6 +302,9 @@ def actualizar_alumno(idAlumno):
         alumno = session.query(Alumno).filter_by(idAlumno=idAlumno).first()
 
         if alumno:
+            # Guardar el municipio anterior
+            municipio_anterior = alumno.idMunicipio
+
             # Actualizar los datos del alumno
             alumno.nombre = nombre
             alumno.primerApe = primerApe
@@ -313,6 +314,15 @@ def actualizar_alumno(idAlumno):
             alumno.idGrado = idGrado
             alumno.idMunicipio = idMunicipio
             alumno.idAsunto = idAsunto
+
+            # Si el municipio ha cambiado, recalcular el turno
+            ticket = session.query(Ticket).filter_by(idAlumno=idAlumno).first()
+            if ticket and municipio_anterior != idMunicipio:
+                # Obtener el nuevo turno para el nuevo municipio
+                max_turno = session.query(func.max(Ticket.ordTicket)).filter(Ticket.idMunicipio == idMunicipio).scalar() or 0
+                nuevo_turno = max_turno + 1
+                ticket.ordTicket = nuevo_turno
+                ticket.idMunicipio = idMunicipio  # Actualizar también el municipio en el ticket
 
             session.commit()
             flash("Datos actualizados exitosamente.", "success")
@@ -327,6 +337,7 @@ def actualizar_alumno(idAlumno):
         session.close()
 
     return redirect(url_for('buscar_alumno'))
+
 
 
 if __name__ == '__main__':
