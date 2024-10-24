@@ -1,0 +1,41 @@
+{% extends "menu_admin2.html" %}
+
+{% block content %}
+<h1>Grado CRUD</h1>
+
+<!-- Formulario para crear nuevo Grado -->
+<h2>Crear Nuevo Grado</h2>
+<form method="post">
+    <input type="text" name="gradoN" placeholder="Nombre del Grado" required>
+    <button type="submit" name="create">Crear</button>
+</form>
+
+<!-- Lista de Grados -->
+<h2>Lista de Grados</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nombre del Grado</th>
+        <th>Acciones</th>
+    </tr>
+    {% for grado in grados %}
+    <tr>
+        <td>{{ grado.idGrado }}</td>
+        <td>{{ grado.gradoN }}</td>
+        <td>
+            <!-- Formulario de Actualización -->
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="idGrado" value="{{ grado.idGrado }}">
+                <input type="text" name="gradoN" value="{{ grado.gradoN }}" required>
+                <button type="submit" name="update">Actualizar</button>
+            </form>
+            <!-- Formulario de Eliminación -->
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="idGrado" value="{{ grado.idGrado }}">
+                <button type="submit" name="delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este Grado?');">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -53,6 +53,22 @@
             text-align: center;
             margin-top: 20px;
         }
+        .options {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .options a {
+            display: inline-block;
+            margin: 10px 15px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .options a:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -65,23 +81,24 @@
 
     <nav>
         <ul>
-            <li><a href="{{ url_for('register') }}">Registrar Nuevo Usuario</a></li>
             <li><a href="{{ url_for('consulta_admin') }}">Consulta por CURP o Nombre (Modificar/Eliminar)</a></li>
             <li><a href="{{ url_for('dashboard') }}">Ver Dashboard de Solicitudes</a></li>
-   
+            <li><a href="{{ url_for('asunto_crud') }}">Administrar Asuntos</a></li>
+            <li><a href="{{ url_for('grado_crud') }}">Administrar Grados</a></li>
+            <li><a href="{{ url_for('cargo_crud') }}">Administrar Cargos</a></li>
+
+            
         </ul>
     </nav>
+
+    <!-- Bloque de contenido dinámico -->
+    {% block content %}
+    <!-- El contenido específico de cada página se insertará aquí -->
+    {% endblock %}
 
     <div class="logout">
         <!-- Botón para cerrar sesión -->
         <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
     </div>
-
-    <!-- Bloque de contenido dinámico -->
-    <div class="content">
-        {% block content %}
-        {% endblock %}
-    </div>
-
 </body>
 </html>

@@ -13,6 +13,7 @@ import hashlib
 app = Flask(__name__)
 app.secret_key = 'juannumbres12'  # Clave secreta para los mensajes flash y otras funcionalidades de seguridad
 db = Database()  # Instancia de la base de datos
+db_session = Database().get_session()
 
 # Nueva ruta para el menú inicial
 @app.route('/menu_inicial', methods=['GET'])
@@ -433,13 +434,13 @@ def menu_admin2():
         # Obtener el nombre y el cargo del usuario desde la sesión
         user_name = session['user_name']
         user_cargo = session['user_cargo']
-
         # Renderizar la página pasando las variables de usuario
         return render_template('menu_admin2.html', user_name=user_name, user_cargo=user_cargo)
     else:
         # Redirigir al login si no hay datos de sesión
         flash('Por favor, inicia sesión primero.', 'warning')
         return redirect(url_for('login'))
+
 
 # Ruta para la consulta, modificación y eliminación de alumnos y tickets@app.route('/consulta_admin', methods=['GET', 'POST'])
 @app.route('/consulta_admin', methods=['GET', 'POST'])
@@ -625,6 +626,136 @@ def dashboard_data():
         return jsonify({'error': 'Ocurrió un error al obtener los datos.'}), 500
 
 ####Cruds#################################################################
+# Ruta para listar y gestionar los estatus
+@app.route('/asunto', methods=['GET', 'POST'])
+def asunto_crud():
+    if 'user_name' not in session:
+        flash('Debes iniciar sesión primero.', 'warning')
+        return redirect(url_for('login'))
+    
+    session_db = db.get_session()
+    if request.method == 'POST':
+        if 'create' in request.form:
+            # Crear nuevo Asunto
+            asunto_name = request.form.get('asuntoN')
+            if asunto_name:
+                new_asunto = Asunto(asuntoN=asunto_name)
+                session_db.add(new_asunto)
+                session_db.commit()
+                session_db.close()
+                return redirect(url_for('asunto_crud'))
+        elif 'update' in request.form:
+            # Actualizar Asunto existente
+            asunto_id = request.form.get('idAsunto')
+            asunto_name = request.form.get('asuntoN')
+            if asunto_id and asunto_name:
+                asunto = session_db.query(Asunto).get(int(asunto_id))
+                if asunto:
+                    asunto.asuntoN = asunto_name
+                    session_db.commit()
+                    session_db.close()
+                    return redirect(url_for('asunto_crud'))
+        elif 'delete' in request.form:
+            # Eliminar Asunto
+            asunto_id = request.form.get('idAsunto')
+            if asunto_id:
+                asunto = session_db.query(Asunto).get(int(asunto_id))
+                if asunto:
+                    session_db.delete(asunto)
+                    session_db.commit()
+                    session_db.close()
+                    return redirect(url_for('asunto_crud'))
+    # Solicitud GET o después de POST
+    asuntos = session_db.query(Asunto).all()
+    session_db.close()
+    return render_template('asunto.html', asuntos=asuntos)
+### GRado####################################################
+@app.route('/grado', methods=['GET', 'POST'])
+def grado_crud():
+    if 'user_name' not in session:
+        flash('Debes iniciar sesión primero.', 'warning')
+        return redirect(url_for('login'))
+
+    session_db = db.get_session()
+    if request.method == 'POST':
+        if 'create' in request.form:
+            # Crear nuevo Grado
+            grado_name = request.form.get('gradoN')
+            if grado_name:
+                new_grado = Grado(gradoN=grado_name)
+                session_db.add(new_grado)
+                session_db.commit()
+                session_db.close()
+                return redirect(url_for('grado_crud'))
+        elif 'update' in request.form:
+            # Actualizar Grado existente
+            grado_id = request.form.get('idGrado')
+            grado_name = request.form.get('gradoN')
+            if grado_id and grado_name:
+                grado = session_db.query(Grado).get(int(grado_id))
+                if grado:
+                    grado.gradoN = grado_name
+                    session_db.commit()
+                    session_db.close()
+                    return redirect(url_for('grado_crud'))
+        elif 'delete' in request.form:
+            # Eliminar Grado
+            grado_id = request.form.get('idGrado')
+            if grado_id:
+                grado = session_db.query(Grado).get(int(grado_id))
+                if grado:
+                    session_db.delete(grado)
+                    session_db.commit()
+                    session_db.close()
+                    return redirect(url_for('grado_crud'))
+    # Solicitud GET o después de POST
+    grados = session_db.query(Grado).all()
+    session_db.close()
+    return render_template('grado.html', grados=grados)
+
+@app.route('/cargo', methods=['GET', 'POST'])
+def cargo_crud():
+    if 'user_name' not in session:
+        flash('Debes iniciar sesión primero.', 'warning')
+        return redirect(url_for('login'))
+
+    session_db = db.get_session()
+    if request.method == 'POST':
+        if 'create' in request.form:
+            # Crear nuevo Cargo
+            cargo_name = request.form.get('cargoN')
+            if cargo_name:
+                new_cargo = Cargo(cargoN=cargo_name)
+                session_db.add(new_cargo)
+                session_db.commit()
+                session_db.close()
+                return redirect(url_for('cargo_crud'))
+        elif 'update' in request.form:
+            # Actualizar Cargo existente
+            cargo_id = request.form.get('idCargo')
+            cargo_name = request.form.get('cargoN')
+            if cargo_id and cargo_name:
+                cargo = session_db.query(Cargo).get(int(cargo_id))
+                if cargo:
+                    cargo.cargoN = cargo_name
+                    session_db.commit()
+                    session_db.close()
+                    return redirect(url_for('cargo_crud'))
+        elif 'delete' in request.form:
+            # Eliminar Cargo
+            cargo_id = request.form.get('idCargo')
+            if cargo_id:
+                cargo = session_db.query(Cargo).get(int(cargo_id))
+                if cargo:
+                    session_db.delete(cargo)
+                    session_db.commit()
+                    session_db.close()
+                    return redirect(url_for('cargo_crud'))
+    # Solicitud GET o después de POST
+    cargos = session_db.query(Cargo).all()
+    session_db.close()
+    return render_template('cargo.html', cargos=cargos)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

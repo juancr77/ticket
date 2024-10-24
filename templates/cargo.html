@@ -1,0 +1,41 @@
+{% extends "menu_admin2.html" %}
+
+{% block content %}
+<h1>Gestión de Cargos</h1>
+
+<!-- Formulario para crear nuevo Cargo -->
+<h2>Crear Nuevo Cargo</h2>
+<form method="post">
+    <input type="text" name="cargoN" placeholder="Nombre del Cargo" required>
+    <button type="submit" name="create">Crear</button>
+</form>
+
+<!-- Lista de Cargos -->
+<h2>Lista de Cargos</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nombre del Cargo</th>
+        <th>Acciones</th>
+    </tr>
+    {% for cargo in cargos %}
+    <tr>
+        <td>{{ cargo.idCargo }}</td>
+        <td>{{ cargo.cargoN }}</td>
+        <td>
+            <!-- Formulario de Actualización -->
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="idCargo" value="{{ cargo.idCargo }}">
+                <input type="text" name="cargoN" value="{{ cargo.cargoN }}" required>
+                <button type="submit" name="update">Actualizar</button>
+            </form>
+            <!-- Formulario de Eliminación -->
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="idCargo" value="{{ cargo.idCargo }}">
+                <button type="submit" name="delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este Cargo?');">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "menu_admin2.html" %}
+
+{% block content %}
+<h1>Asunto CRUD</h1>
+
+<!-- Formulario para crear nuevo Asunto -->
+<h2>Crear Nuevo Asunto</h2>
+<form method="post">
+    <input type="text" name="asuntoN" placeholder="Nombre del Asunto" required>
+    <button type="submit" name="create">Crear</button>
+</form>
+
+<!-- Lista de Asuntos -->
+<h2>Lista de Asuntos</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Nombre del Asunto</th>
+        <th>Acciones</th>
+    </tr>
+    {% for asunto in asuntos %}
+    <tr>
+        <td>{{ asunto.idAsunto }}</td>
+        <td>{{ asunto.asuntoN }}</td>
+        <td>
+            <!-- Formulario de Actualización -->
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="idAsunto" value="{{ asunto.idAsunto }}">
+                <input type="text" name="asuntoN" value="{{ asunto.asuntoN }}" required>
+                <button type="submit" name="update">Actualizar</button>
+            </form>
+            <!-- Formulario de Eliminación -->
+            <form method="post" style="display:inline;">
+                <input type="hidden" name="idAsunto" value="{{ asunto.idAsunto }}">
+                <button type="submit" name="delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este Asunto?');">Eliminar</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
