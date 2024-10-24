@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #00ff00;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #ffcc00;
+    margin-top: 30px;
+    font-size: 1.8em;
+    text-shadow: 2px 2px #000;
+}
+
+nav {
+    background-color: #333;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid #ffcc00;
+}
+
+nav .menu-icon {
+    display: none;
+    font-size: 2em;
+    color: #00ff00;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: #00ff00;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #333;
+    border: 2px solid #ffcc00;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+    font-size: 0.8em;
+}
+
+nav ul li a:hover {
+    background-color: #ffcc00;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.welcome p {
+    font-size: 1.2em;
+    color: #00ff00;
+    margin-top: 10px;
+    text-shadow: 1px 1px #000;
+}
+
+.logout a {
+    color: #fff;
+    background-color: #ff0000;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 30px;
+    border: 2px solid #ffcc00;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-size: 0.8em;
+}
+
+.logout a:hover {
+    background-color: #ffcc00;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para móviles */
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin: 0;
+    }
+
+    nav ul li {
+        margin: 15px 0; /* Más espacio entre los botones */
+    }
+
+    nav .menu-icon {
+        display: block;
+    }
+
+    nav ul li a {
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+input[type="text"] {
+    width: 60%; /* Reducido el ancho */
+    padding: 5px; /* Menor padding */
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 2px solid #ffcc00;
+    background-color: #000;
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8em; /* Reducido el tamaño de la fuente */
+    box-sizing: border-box;
+}
+
+button, input[type="submit"] {
+    background-color: #ffcc00;
+    color: #000;
+    padding: 10px 20px;
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8em;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #00ff00;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos para selects */
+select {
+    width: 60%; /* Tamaño similar a los inputs */
+    padding: 5px;
+    border-radius: 5px;
+    border: 2px solid #ffcc00;
+    background-color: #000;
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8em;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+/* Estilos para input[type="date"] */
+input[type="date"] {
+    width: 60%; /* Tamaño similar a los inputs */
+    padding: 5px;
+    border-radius: 5px;
+    border: 2px solid #ffcc00;
+    background-color: #000;
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8em;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    button, input[type="submit"] {
+        width: 80%;
+        font-size: 0.7em;
+        padding: 10px;
+    }
+
+    select, input[type="date"] {
+        width: 80%;
+        font-size: 0.7em;
+    }
+}

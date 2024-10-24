@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #00ff00;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #ffcc00;
+    margin-top: 30px;
+    font-size: 2.5em;  /* Hacer el título más grande */
+    text-shadow: 2px 2px #000;
+}
+
+/* Estilo para el select */
+select {
+    width: 80%;  /* Aumentar el ancho */
+    padding: 15px;  /* Aumentar el padding */
+    margin: 30px 0;  /* Más espacio alrededor */
+    border-radius: 5px;
+    border: 2px solid #ffcc00;
+    background-color: #000;
+    color: #00ff00;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;  /* Aumentar el tamaño de la fuente */
+    box-sizing: border-box;
+}
+
+/* Estilo para el canvas (gráfico) */
+canvas {
+    margin: 30px auto;
+    background-color: #000;
+    border: 2px solid #ffcc00;
+    width: 95%;  /* Hacer el canvas más grande */
+    max-width: 800px;  /* Limitar el tamaño máximo */
+    display: block;  /* Centrar el canvas */
+}
+
+/* Estilos para botones */
+button, input[type="submit"] {
+    background-color: #ffcc00;
+    color: #000;
+    padding: 15px 30px;  /* Aumentar el tamaño de los botones */
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2em;  /* Aumentar el tamaño de la fuente de los botones */
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #00ff00;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    select {
+        width: 90%;
+        font-size: 1em;
+    }
+
+    canvas {
+        width: 95%;
+        max-width: 600px;  /* Ajustar en pantallas pequeñas */
+    }
+
+    button, input[type="submit"] {
+        width: 90%;
+        font-size: 1em;
+        padding: 10px;
+    }
+}

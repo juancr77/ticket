@@ -2,15 +2,21 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/menu_admin.css') }}">
 </head>
 <body>
-    <h2>Menú Administrador</h2>
+    <h1>Menú Administrador</h1>
     <p>Selecciona una opción:</p>
     <ul>
         <li><a href="/register">Registrar Administrador</a></li>
         <li><a href="/login">Iniciar Sesión</a></li>
-       
+        <a href="{{ url_for('menu_inicial') }}">
+            <button>Volver al Menú Inicial</button>
+        </a>
     </ul>
+    <!-- Botón adicional para volver al Menú Inicial -->
+    
 </body>
 </html>

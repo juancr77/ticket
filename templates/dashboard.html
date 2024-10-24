@@ -22,7 +22,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             // Obtener el contexto del canvas
             var ctx = document.getElementById('estatusChart').getContext('2d');
-
+    
             // Crear la gráfica inicial con dos datasets (Pendiente y Resuelto)
             var estatusChart = new Chart(ctx, {
                 type: 'bar',
@@ -32,14 +32,14 @@
                         {
                             label: 'Pendiente',
                             data: [0, 0], // Inicialmente vacío
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)', // Rojo para Pendiente
                             borderColor: 'rgba(255, 99, 132, 1)',
                             borderWidth: 1
                         },
                         {
                             label: 'Resuelto',
                             data: [0, 0], // Inicialmente vacío
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)', // Azul para Resuelto
                             borderColor: 'rgba(54, 162, 235, 1)',
                             borderWidth: 1
                         }
@@ -53,26 +53,24 @@
                     }
                 }
             });
-
+    
             // Función para actualizar la gráfica según el filtro
             function updateChart(municipio) {
                 fetch('/dashboard/data')
                     .then(response => response.json())
                     .then(data => {
                         if (municipio === 'distribution') {
-                            // Mostrar la distribución por municipios
                             let municipios = [];
                             let pendientes = [];
                             let resueltos = [];
-
-                            // Procesar los datos para mostrar la distribución por municipios
+    
                             data.tickets_por_municipio.forEach(item => {
                                 if (!municipios.includes(item.municipio)) {
                                     municipios.push(item.municipio);
-                                    pendientes.push(0);  // Inicializar con 0
-                                    resueltos.push(0);    // Inicializar con 0
+                                    pendientes.push(0);  
+                                    resueltos.push(0);    
                                 }
-
+    
                                 let index = municipios.indexOf(item.municipio);
                                 if (item.estatus == 1) {
                                     pendientes[index] = item.total;
@@ -80,19 +78,17 @@
                                     resueltos[index] = item.total;
                                 }
                             });
-
-                            // Actualizar los datos y las etiquetas de la gráfica
+    
                             estatusChart.data.labels = municipios;
-                            estatusChart.data.datasets[0].data = pendientes;  // Actualizar datos de "Pendiente"
-                            estatusChart.data.datasets[1].data = resueltos;   // Actualizar datos de "Resuelto"
+                            estatusChart.data.datasets[0].data = pendientes;  
+                            estatusChart.data.datasets[1].data = resueltos;   
                             estatusChart.data.datasets[0].label = 'Pendiente';
                             estatusChart.data.datasets[1].label = 'Resuelto';
-
+    
                         } else if (municipio === 'all') {
-                            // Mostrar el total de solicitudes por estatus
                             let pendientes = 0;
                             let resueltos = 0;
-
+    
                             data.total_por_estatus.forEach(item => {
                                 if (item.estatus == 1) {
                                     pendientes = item.total;
@@ -100,18 +96,16 @@
                                     resueltos = item.total;
                                 }
                             });
-
-                            // Actualizar los datos de la gráfica
+    
                             estatusChart.data.labels = ['Pendiente', 'Resuelto'];
                             estatusChart.data.datasets[0].data = [pendientes, resueltos];
                             estatusChart.data.datasets[0].label = 'Total de Solicitudes';
-                            estatusChart.data.datasets[1].data = [0, 0];  // Ocultar el dataset "Resuelto"
-
+                            estatusChart.data.datasets[1].data = [0, 0];  
+    
                         } else {
-                            // Filtrar por municipio específico
                             let pendientes = 0;
                             let resueltos = 0;
-
+    
                             data.tickets_por_municipio.forEach(item => {
                                 if (item.municipio === municipio) {
                                     if (item.estatus == 1) {
@@ -121,26 +115,23 @@
                                     }
                                 }
                             });
-
-                            // Actualizar los datos de la gráfica
+    
                             estatusChart.data.labels = ['Pendiente', 'Resuelto'];
                             estatusChart.data.datasets[0].data = [pendientes, resueltos];
                             estatusChart.data.datasets[0].label = `Solicitudes en ${municipio}`;
-                            estatusChart.data.datasets[1].data = [0, 0];  // Ocultar el dataset "Resuelto"
+                            estatusChart.data.datasets[1].data = [0, 0];  
                         }
-
+    
                         estatusChart.update();
                     });
             }
-
-            // Cargar la lista de municipios y actualizar la gráfica inicial
+    
             fetch('/dashboard/data')
                 .then(response => response.json())
                 .then(data => {
                     let selectMunicipio = document.getElementById('municipio');
                     let municipios = [];
-
-                    // Llenar el select con los municipios
+    
                     data.tickets_por_municipio.forEach(item => {
                         if (!municipios.includes(item.municipio)) {
                             municipios.push(item.municipio);
@@ -150,12 +141,10 @@
                             selectMunicipio.appendChild(option);
                         }
                     });
-
-                    // Mostrar el total de solicitudes inicialmente
+    
                     updateChart('all');
                 });
-
-            // Actualizar la gráfica cuando se selecciona un municipio o la opción de distribución
+    
             document.getElementById('municipio').addEventListener('change', function () {
                 let municipio = this.value;
                 updateChart(municipio);

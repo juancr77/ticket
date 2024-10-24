@@ -1,0 +1,76 @@
+/* Estilos generales */
+body {
+    font-family: 'Press Start 2P', cursive; /* Fuente estilo retro-gamer */
+    background-color: #1b1b32; /* Fondo oscuro retro */
+    color: #f8f8f2; /* Texto blanco apagado */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #ffcc00; /* Amarillo vibrante estilo arcade */
+    text-shadow: 2px 2px #ff0066; /* Sombra rosa estilo 8-bit */
+}
+
+.menu {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espacio entre botones */
+    align-items: center;
+}
+
+.menu button {
+    font-size: 1.1rem;
+    background-color: #00cc66; /* Verde fosforescente */
+    color: #1b1b32;
+    border: none;
+    padding: 15px 30px; /* Tamaño del botón */
+    border-radius: 0px; /* Bordes cuadrados para un toque retro */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase; /* Todo en mayúsculas para el estilo arcade */
+    letter-spacing: 2px; /* Espaciado de letras estilo retro */
+}
+
+.menu button:hover {
+    background-color: #ff0066; /* Rosa vibrante */
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.menu button:focus {
+    outline: none;
+    background-color: #ff0066; /* Enfoque en rosa vibrante */
+}
+
+/* Estilo de fuente retro */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .menu button {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+}
+
+/* Estilo para la accesibilidad */
+.menu button:focus-visible {
+    outline: 3px solid #ffcc00; /* Resaltado en amarillo estilo retro */
+    outline-offset: 2px;
+}

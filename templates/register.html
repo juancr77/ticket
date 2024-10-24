@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Registro de Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/register.css') }}"> <!-- Vincula al archivo CSS -->
 </head>
 <body>
     <h2>Registrar nuevo usuario</h2>
@@ -23,19 +24,22 @@
         <input type="text" id="segundoAp" name="segundoAp">
         <br><br>
         <label for="idCargo">Cargo:</label>
-        <label for="idCargo">Cargo:</label>
-<select id="idCargo" name="idCargo">
-    <option value="">Selecciona un cargo</option>
-    {% for cargo in cargos %}
-        <option value="{{ cargo.idCargo }}">{{ cargo.cargoN }}</option>
-    {% endfor %}
-</select>
-
+        <select id="idCargo" name="idCargo">
+            <option value="">Selecciona un cargo</option>
+            {% for cargo in cargos %}
+                <option value="{{ cargo.idCargo }}">{{ cargo.cargoN }}</option>
+            {% endfor %}
+        </select>
         <br><br>
         <button type="submit">Registrar</button>
     </form>
 
     <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a></p>
+
+    <!-- Botón para volver al menú inicial -->
+    <a href="{{ url_for('menu_inicial') }}">
+        <button class="btn-regresar">Volver al Menú Inicial</button>
+    </a>
 
     <!-- Mensajes flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}

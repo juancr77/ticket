@@ -6,7 +6,7 @@
     <title>Menú de Registro de Alumnos</title>
 
     <!-- Enlace al archivo CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='Css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Css/menu_alumno.css') }}">
 
 </head>
 <body>
@@ -23,6 +23,12 @@
     <!-- Opción para buscar un alumno existente -->
     <a href="{{ url_for('buscar_alumno') }}">
         <button>Buscar Registro</button>
+    </a>
+    <br><br>
+
+    <!-- Opción para volver al menú inicial -->
+    <a href="{{ url_for('menu_inicial') }}">
+        <button>Volver al Menú Inicial</button>
     </a>
 
 </body>
