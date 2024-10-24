@@ -11,7 +11,18 @@
 <body>
     <h1>Modificar Registro de Alumno</h1>
 
-    <form action="{{ url_for('actualizar_alumno', idAlumno=alumno.idAlumno) }}" method="POST">
+    <!-- Mostrar mensajes flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form id="updateForm">
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre" value="{{ alumno.nombre }}" required><br><br>
 
@@ -26,6 +37,10 @@
 
         <label for="correo">Correo Electrónico:</label>
         <input type="email" id="correo" name="correo" value="{{ alumno.correo }}" required><br><br>
+
+        <!-- Agregar el campo CURP -->
+        <label for="curp">CURP:</label>
+        <input type="text" id="curp" name="curp" value="{{ alumno.curp }}" required><br><br>
 
         <label for="grado">Grado:</label>
         <select id="grado" name="idGrado">
@@ -64,5 +79,72 @@
         <button type="submit">Regresar al Menú</button>
     </form>
 
+    <!-- Incluir JavaScript para manejar la actualización -->
+    <script>
+        document.getElementById('updateForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evitar el envío del formulario
+
+            // Obtener el ID del alumno de forma segura
+            const alumnoId = {{ alumno.idAlumno|tojson }};
+
+            // Verificar que alumnoId está definido
+            if (!alumnoId) {
+                alert('Error: No se pudo obtener el ID del alumno.');
+                return;
+            }
+
+            // Crear FormData con los datos del formulario
+            const formData = new FormData(document.getElementById('updateForm'));
+
+            fetch(`/actualizar_alumno/${alumnoId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Error al actualizar el alumno.');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Mostrar mensaje de éxito
+                alert(data.message + ' El PDF se descargará a continuación.');
+
+                // Descargar el PDF
+                fetch(`/generar_pdf/${alumnoId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al generar el PDF.');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `ticket_alumno_${alumnoId}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    // Esperar un momento antes de redirigir
+                    setTimeout(() => {
+                        // Redirigir a 'buscar_alumno'
+                        window.location.href = '/buscar_alumno';
+                    }, 2000); // Espera 2 segundos antes de redirigir
+                })
+                .catch(error => {
+                    console.error('Error al descargar el PDF:', error);
+                    alert('Ocurrió un error al descargar el PDF. Por favor, intente de nuevo.');
+                });
+            })
+            .catch(error => {
+                console.error('Error al actualizar el alumno:', error);
+                alert(error.message);
+            });
+        });
+    </script>
 </body>
 </html>

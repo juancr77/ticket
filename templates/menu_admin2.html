@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Menú Administrador{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 2px -2px gray;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #0056b3;
+        }
+        .welcome {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .logout {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido al Menú de Administración</h1>
+
+    <div class="welcome">
+        <!-- Mostrar el nombre y el cargo del usuario -->
+        <p>Hola, {{ user_name }} ({{ user_cargo }})</p>
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('register') }}">Registrar Nuevo Usuario</a></li>
+            <li><a href="{{ url_for('consulta_admin') }}">Consulta por CURP o Nombre (Modificar/Eliminar)</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Ver Dashboard de Solicitudes</a></li>
+   
+        </ul>
+    </nav>
+
+    <div class="logout">
+        <!-- Botón para cerrar sesión -->
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar Sesión</a>
+    </div>
+
+    <!-- Bloque de contenido dinámico -->
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>
