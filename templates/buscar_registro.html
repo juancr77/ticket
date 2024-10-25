@@ -7,6 +7,11 @@
 
     <!-- Enlace al archivo CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='Css/buscar_registro.css') }}">
+
+    <!-- Enlace a SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Enlace al archivo de validación JS -->
+    <script src="{{ url_for('static', filename='Scripts/buscar_registro.js') }}" defer></script>
 </head>
 <body>
     <h1>Buscar Registro de Alumno</h1>
@@ -22,12 +27,12 @@
         {% endif %}
     {% endwith %}
 
-    <form action="{{ url_for('buscar_alumno') }}" method="POST">
+    <form id="searchForm" action="{{ url_for('buscar_alumno') }}" method="POST">
         <label for="curp">CURP:</label>
-        <input type="text" id="curp" name="curp" required><br><br>
+        <input type="text" id="curp" name="curp" ><br><br>
 
         <label for="ordTicket">Número de Turno:</label>
-        <input type="text" id="ordTicket" name="ordTicket" required><br><br>
+        <input type="text" id="ordTicket" name="ordTicket" ><br><br>
 
         <input type="submit" value="Buscar Registro">
     </form>
@@ -38,6 +43,5 @@
     <form action="{{ url_for('menu_alumno') }}" method="GET">
         <button type="submit">Regresar al Menú</button>
     </form>
-   
 </body>
 </html>

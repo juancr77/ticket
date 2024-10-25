@@ -431,15 +431,14 @@ def logout():
 @app.route('/menu_admin2')
 def menu_admin2():
     if 'user_name' in session and 'user_cargo' in session:
-        # Obtener el nombre y el cargo del usuario desde la sesión
         user_name = session['user_name']
         user_cargo = session['user_cargo']
-        # Renderizar la página pasando las variables de usuario
         return render_template('menu_admin2.html', user_name=user_name, user_cargo=user_cargo)
     else:
-        # Redirigir al login si no hay datos de sesión
         flash('Por favor, inicia sesión primero.', 'warning')
         return redirect(url_for('login'))
+
+
 
 
 # Ruta para la consulta, modificación y eliminación de alumnos y tickets@app.route('/consulta_admin', methods=['GET', 'POST'])

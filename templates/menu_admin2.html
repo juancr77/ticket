@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='Css/menu_admin2.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='Css/dashboard.css') }}">
 
+    
 </head>
 <body>
     <h1>Menú Admin</h1>
@@ -43,6 +44,10 @@
                 nav.style.display = "flex";
             }
         }
+        window.addEventListener('popstate', function (event) {
+        window.location.href = "{{ url_for('logout') }}";
+    });
     </script>
+
 </body>
 </html>

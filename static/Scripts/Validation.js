@@ -36,7 +36,7 @@ document.getElementById('registerForm').addEventListener('submit', function (eve
     .then(data => {
         if (data.exists) {
             // Si el alumno ya está registrado, mostrar mensaje detallado
-            alert(data.message);
+            Swal.fire('Información', data.message, 'info');
         } else {
             // Si no está registrado, permitir el registro y descargar el PDF
             fetch('/register_alumno', {
@@ -53,7 +53,7 @@ document.getElementById('registerForm').addEventListener('submit', function (eve
             })
             .then(data => {
                 // Mostrar mensaje de éxito
-                alert('Registro exitoso. El PDF se descargará a continuación.');
+                Swal.fire('Registro exitoso', 'El PDF se descargará a continuación.', 'success');
 
                 // Descargar el PDF
                 if (data.alumno_id) {
@@ -81,19 +81,19 @@ document.getElementById('registerForm').addEventListener('submit', function (eve
                     })
                     .catch(error => {
                         console.error('Error al descargar el PDF:', error);
-                        alert('Ocurrió un error al descargar el PDF. Por favor, intente de nuevo.');
+                        Swal.fire('Error', 'Ocurrió un error al descargar el PDF. Por favor, intente de nuevo.', 'error');
                     });
                 }
             })
             .catch(error => {
                 console.error('Error al registrar al alumno:', error);
-                alert(error.message);
+                Swal.fire('Error', error.message, 'error');
             });
         }
     })
     .catch(error => {
         console.error('Error al verificar el alumno:', error);
-        alert(error.message);
+        Swal.fire('Error', error.message, 'error');
     });
 });
 
@@ -104,15 +104,24 @@ function validarFormulario() {
     const correo = document.getElementById('correo').value.trim();
     const curp = document.getElementById('curp').value.trim();
 
-    if (!nombre || !primerApe || !correo || !curp) {
-        alert('Por favor, completa todos los campos obligatorios.');
+    if (!nombre) {
+        Swal.fire('Campo requerido', 'Por favor, ingresa el nombre.', 'warning');
+        return false;
+    } else if (!primerApe) {
+        Swal.fire('Campo requerido', 'Por favor, ingresa el primer apellido.', 'warning');
+        return false;
+    } else if (!correo) {
+        Swal.fire('Campo requerido', 'Por favor, ingresa el correo electrónico.', 'warning');
+        return false;
+    } else if (!curp) {
+        Swal.fire('Campo requerido', 'Por favor, ingresa el CURP.', 'warning');
         return false;
     }
 
     // Validar formato del correo electrónico
     const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!correoRegex.test(correo)) {
-        alert('Por favor, ingresa un correo electrónico válido.');
+        Swal.fire('Formato inválido', 'Por favor, ingresa un correo electrónico válido.', 'warning');
         return false;
     }
 

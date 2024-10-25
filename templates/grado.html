@@ -5,8 +5,8 @@
 
 <!-- Formulario para crear nuevo Grado -->
 <h2>Crear Nuevo Grado</h2>
-<form method="post">
-    <input type="text" name="gradoN" placeholder="Nombre del Grado" required>
+<form method="post" onsubmit="return validateCreateForm()">
+    <input type="text" id="newGrado" name="gradoN" placeholder="Nombre del Grado">
     <button type="submit" name="create">Crear</button>
 </form>
 
@@ -24,18 +24,59 @@
         <td>{{ grado.gradoN }}</td>
         <td>
             <!-- Formulario de Actualización -->
-            <form method="post" style="display:inline;">
+            <form method="post" style="display:inline;" onsubmit="return validateUpdateForm({{ grado.idGrado }})">
                 <input type="hidden" name="idGrado" value="{{ grado.idGrado }}">
-                <input type="text" name="gradoN" value="{{ grado.gradoN }}" required>
+                <input type="text" id="updateGrado{{ grado.idGrado }}" name="gradoN" value="{{ grado.gradoN }}">
                 <button type="submit" name="update">Actualizar</button>
             </form>
             <!-- Formulario de Eliminación -->
-            <form method="post" style="display:inline;">
+            <form method="post" style="display:inline;" onsubmit="return confirmDelete()">
                 <input type="hidden" name="idGrado" value="{{ grado.idGrado }}">
-                <button type="submit" name="delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este Grado?');">Eliminar</button>
+                <button type="submit" name="delete">Eliminar</button>
             </form>
         </td>
     </tr>
     {% endfor %}
 </table>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Validación del formulario de creación
+    function validateCreateForm() {
+        const grado = document.getElementById("newGrado").value;
+        if (!grado) {
+            Swal.fire("Falta el nombre del grado", "Por favor, ingresa el nombre del nuevo grado.", "warning");
+            return false;
+        }
+        return true;
+    }
+
+    // Validación del formulario de actualización
+    function validateUpdateForm(idGrado) {
+        const grado = document.getElementById(`updateGrado${idGrado}`).value;
+        if (!grado) {
+            Swal.fire("Falta el nombre del grado", "Por favor, ingresa el nombre del grado.", "warning");
+            return false;
+        }
+        return true;
+    }
+
+    // Confirmación de eliminación
+    function confirmDelete() {
+        return Swal.fire({
+            title: "¿Estás seguro?",
+            text: "Esta acción no se puede deshacer",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            return result.isConfirmed; // Solo envía el formulario si el usuario confirma
+        });
+    }
+</script>
 {% endblock %}

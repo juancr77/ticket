@@ -5,8 +5,8 @@
 
 <!-- Formulario para crear nuevo Asunto -->
 <h2>Crear Nuevo Asunto</h2>
-<form method="post">
-    <input type="text" name="asuntoN" placeholder="Nombre del Asunto" required>
+<form method="post" onsubmit="return validateCreateForm()">
+    <input type="text" id="newAsunto" name="asuntoN" placeholder="Nombre del Asunto">
     <button type="submit" name="create">Crear</button>
 </form>
 
@@ -24,18 +24,59 @@
         <td>{{ asunto.asuntoN }}</td>
         <td>
             <!-- Formulario de Actualización -->
-            <form method="post" style="display:inline;">
+            <form method="post" style="display:inline;" onsubmit="return validateUpdateForm({{ asunto.idAsunto }})">
                 <input type="hidden" name="idAsunto" value="{{ asunto.idAsunto }}">
-                <input type="text" name="asuntoN" value="{{ asunto.asuntoN }}" required>
+                <input type="text" id="updateAsunto{{ asunto.idAsunto }}" name="asuntoN" value="{{ asunto.asuntoN }}">
                 <button type="submit" name="update">Actualizar</button>
             </form>
             <!-- Formulario de Eliminación -->
-            <form method="post" style="display:inline;">
+            <form method="post" style="display:inline;" onsubmit="return confirmDelete()">
                 <input type="hidden" name="idAsunto" value="{{ asunto.idAsunto }}">
-                <button type="submit" name="delete" onclick="return confirm('¿Estás seguro de que deseas eliminar este Asunto?');">Eliminar</button>
+                <button type="submit" name="delete">Eliminar</button>
             </form>
         </td>
     </tr>
     {% endfor %}
 </table>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Validación del formulario de creación
+    function validateCreateForm() {
+        const asunto = document.getElementById("newAsunto").value;
+        if (!asunto) {
+            Swal.fire("Falta el nombre del asunto", "Por favor, ingresa el nombre del nuevo asunto.", "warning");
+            return false;
+        }
+        return true;
+    }
+
+    // Validación del formulario de actualización
+    function validateUpdateForm(idAsunto) {
+        const asunto = document.getElementById(`updateAsunto${idAsunto}`).value;
+        if (!asunto) {
+            Swal.fire("Falta el nombre del asunto", "Por favor, ingresa el nombre del asunto.", "warning");
+            return false;
+        }
+        return true;
+    }
+
+    // Confirmación de eliminación
+    function confirmDelete() {
+        return Swal.fire({
+            title: "¿Estás seguro?",
+            text: "Esta acción no se puede deshacer",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            return result.isConfirmed; // Solo envía el formulario si el usuario confirma
+        });
+    }
+</script>
 {% endblock %}

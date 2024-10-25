@@ -8,7 +8,7 @@
     <h1>Consulta de Alumnos</h1>
 
     <!-- Formulario de búsqueda -->
-    <form method="POST" action="{{ url_for('consulta_admin') }}">
+    <form id="searchForm" method="POST" action="{{ url_for('consulta_admin') }}" onsubmit="return validateSearchForm()">
         <label for="curp">Buscar por CURP:</label>
         <input type="text" id="curp" name="curp">
       
@@ -17,7 +17,7 @@
 
     {% if alumno %}
     <h2>Información del Alumno</h2>
-    <form method="POST" action="{{ url_for('actualizar_alumno_ticket', idAlumno=alumno.idAlumno) }}">
+    <form id="updateForm" method="POST" action="{{ url_for('actualizar_alumno_ticket', idAlumno=alumno.idAlumno) }}" onsubmit="return validateUpdateForm()">
         <!-- Datos del alumno -->
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre" value="{{ alumno.nombre }}">
@@ -83,4 +83,65 @@
         <button type="submit">Eliminar Alumno y Ticket</button>
     </form>
     {% endif %}
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Validación del formulario de búsqueda
+        function validateSearchForm() {
+            const curp = document.getElementById("curp").value;
+            if (!curp) {
+                Swal.fire("Falta el CURP", "Por favor, ingresa un CURP para buscar.", "warning");
+                return false;
+            }
+            return true;
+        }
+
+        // Validación del formulario de actualización
+        function validateUpdateForm() {
+            const nombre = document.getElementById("nombre").value;
+            const primerApe = document.getElementById("primerApe").value;
+            const telefono = document.getElementById("telefono").value;
+            const correo = document.getElementById("correo").value;
+            const ordTicket = document.getElementById("ordTicket").value;
+            const fecha = document.getElementById("fecha").value;
+            const idMunicipio = document.getElementById("idMunicipio").value;
+            const idAsunto = document.getElementById("idAsunto").value;
+
+            if (!nombre) {
+                Swal.fire("Falta el nombre", "Por favor, ingresa el nombre del alumno.", "warning");
+                return false;
+            }
+            if (!primerApe) {
+                Swal.fire("Falta el primer apellido", "Por favor, ingresa el primer apellido del alumno.", "warning");
+                return false;
+            }
+            if (!telefono) {
+                Swal.fire("Falta el teléfono", "Por favor, ingresa un número de teléfono.", "warning");
+                return false;
+            }
+            if (!correo) {
+                Swal.fire("Falta el correo", "Por favor, ingresa un correo electrónico.", "warning");
+                return false;
+            }
+            if (!ordTicket) {
+                Swal.fire("Falta la orden del ticket", "Por favor, ingresa la orden del ticket.", "warning");
+                return false;
+            }
+            if (!fecha) {
+                Swal.fire("Falta la fecha", "Por favor, selecciona la fecha del ticket.", "warning");
+                return false;
+            }
+            if (!idMunicipio) {
+                Swal.fire("Falta seleccionar el municipio", "Por favor, selecciona un municipio.", "warning");
+                return false;
+            }
+            if (!idAsunto) {
+                Swal.fire("Falta seleccionar el asunto", "Por favor, selecciona un asunto.", "warning");
+                return false;
+            }
+            return true; // Si todos los campos están completos, permite el envío del formulario.
+        }
+    </script>
 {% endblock %}

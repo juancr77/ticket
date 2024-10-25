@@ -10,6 +10,8 @@
     
     <!-- Enlace al archivo JS -->
     <script src="{{ url_for('static', filename='Scripts/Validation.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
     <h1>Registrar Alumno</h1>
@@ -34,37 +36,37 @@
         <form action="/register_alumno" method="POST" id="registerForm">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre">
             </div>
 
             <div class="form-group">
                 <label for="primerApe">Primer Apellido:</label>
-                <input type="text" id="primerApe" name="primerApe" required>
+                <input type="text" id="primerApe" name="primerApe">
             </div>
 
             <div class="form-group">
                 <label for="segundoApe">Segundo Apellido:</label>
-                <input type="text" id="segundoApe" name="segundoApe" required>
+                <input type="text" id="segundoApe" name="segundoApe">
             </div>
 
             <div class="form-group">
                 <label for="telefono">Teléfono:</label>
-                <input type="tel" id="telefono" name="telefono" required>
+                <input type="tel" id="telefono" name="telefono">
             </div>
 
             <div class="form-group">
                 <label for="correo">Correo Electrónico:</label>
-                <input type="email" id="correo" name="correo" required>
+                <input type="email" id="correo" name="correo">
             </div>
 
             <div class="form-group">
                 <label for="curp">CURP:</label>
-                <input type="text" id="curp" name="curp" required>
+                <input type="text" id="curp" name="curp">
             </div>
 
             <div class="form-group">
                 <label for="grado">Grado:</label>
-                <select id="grado" name="idGrado" required>
+                <select id="grado" name="idGrado">
                     {% for grado in grados %}
                         <option value="{{ grado.idGrado }}">{{ grado.gradoN }}</option>
                     {% endfor %}
@@ -73,7 +75,7 @@
 
             <div class="form-group">
                 <label for="municipio">Municipio:</label>
-                <select id="municipio" name="idMunicipio" required>
+                <select id="municipio" name="idMunicipio">
                     {% for municipio in municipios %}
                         <option value="{{ municipio.idMunicipio }}">{{ municipio.nombreN }}</option>
                     {% endfor %}
@@ -82,7 +84,7 @@
 
             <div class="form-group">
                 <label for="asunto">Asunto:</label>
-                <select id="asunto" name="idAsunto" required>
+                <select id="asunto" name="idAsunto">
                     {% for asunto in asuntos %}
                         <option value="{{ asunto.idAsunto }}">{{ asunto.asuntoN }}</option>
                     {% endfor %}
