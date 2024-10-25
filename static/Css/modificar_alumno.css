@@ -11,7 +11,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Evitar exceso de espacio vertical */
+    justify-content: flex-start; /* Cambiado de center a flex-start para evitar excesivo espacio vertical */
     min-height: 100vh;
     text-align: center;
     transition: background-color 0.3s ease;
@@ -19,27 +19,10 @@ body {
 
 /* Título */
 h1 {
-    font-size: 2.5rem; /* Tamaño reducido para apariencia más compacta */
+    font-size: 2.5rem; /* Tamaño reducido para una apariencia más compacta */
     margin-bottom: 1rem;
     color: #1e90ff; /* Azul brillante estilo neón */
     text-shadow: 2px 2px #003366, 2px 2px 0px #000000; /* Sombra azul oscuro estilo arcade */
-    position: relative;
-}
-
-/* Elemento Gráfico de Cómic (Onomatopeia) */
-h1::after {
-    content: 'BAM!';
-    position: absolute;
-    top: -10px;
-    right: -20px;
-    background-color: #1e90ff; /* Azul brillante */
-    color: #0a1f44; /* Azul marino profundo */
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    font-family: 'Press Start 2P', cursive;
-    transform: rotate(-15deg);
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    border-radius: 5px;
 }
 
 /* Lista de mensajes flash */
@@ -55,9 +38,6 @@ li {
     margin-bottom: 10px;
     border-radius: 5px;
     color: #ffffff;
-    font-family: 'Press Start 2P', cursive;
-    position: relative;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
 /* Contenedor del formulario */
@@ -70,11 +50,6 @@ li {
     width: 100%;
     max-width: 400px; /* Ajustado para mayor comodidad */
     border: 3px solid #1e90ff; /* Borde azul brillante */
-    background-image: url('https://i.imgur.com/your-comic-background.png'); /* Opcional: agregar un fondo con textura de cómic */
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: relative;
 }
 
 /* Etiquetas */
@@ -84,7 +59,6 @@ label {
     font-size: 0.9rem; /* Reducido de 1rem a 0.9rem */
     color: #87ceeb; /* Azul cielo */
     text-align: left; /* Alineación a la izquierda para mejor legibilidad */
-    text-shadow: 1px 1px #000000; /* Sombra para resaltar el texto */
 }
 
 /* Campos de entrada y select */
@@ -103,7 +77,6 @@ select {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     text-align: center; /* Centrado del texto */
-    box-sizing: border-box; /* Evita que el padding aumente el ancho total */
 }
 
 /* Enfoque en campos de entrada */
@@ -114,7 +87,6 @@ select:focus {
     outline: none;
     background-color: #1e90ff; /* Fondo azul brillante al enfoque */
     color: #ffffff;
-    border-color: #87ceeb; /* Azul cielo */
     box-shadow: 0 4px 8px rgba(30, 144, 255, 0.5); /* Sombra azul vibrante */
 }
 
@@ -131,8 +103,6 @@ input[type="submit"] {
     letter-spacing: 1.5px; /* Reducido de 2px a 1.5px */
     transition: background-color 0.3s ease, transform 0.2s ease;
     width: 100%; /* Botón ocupa todo el ancho del formulario */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    margin-top: 10px; /* Añadido margen superior */
 }
 
 /* Efecto hover en el botón de envío */
@@ -149,20 +119,15 @@ button {
     background-color: #1e90ff; /* Azul cian vibrante */
     color: #0a1f44;
     border: 2px solid #87ceeb; /* Borde azul cielo */
-    padding: 12px 25px; /* Espaciado interno del botón */
-    border-radius: 4px; /* Esquinas redondeadas */
+    padding: 12px 25px; /* Reducido de 15px 30px a 12px 25px */
+    border-radius: 4px; /* Reducido de 5px a 4px */
     cursor: pointer;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin: 15px auto; /* Centra el botón horizontalmente */
+    letter-spacing: 1.5px; /* Reducido de 2px a 1.5px */
+    margin-top: 15px; /* Reducido de 20px a 15px */
     transition: background-color 0.3s ease, transform 0.2s ease;
-    width: auto; /* Ajusta el ancho al contenido del texto */
-    max-width: 300px; /* Define un ancho máximo para evitar que sea demasiado grande */
-    display: block; /* Asegura que el botón esté centrado */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    width: 100%; /* Botón ocupa todo el ancho del formulario */
 }
-
-
 
 /* Efecto hover en el botón de regresar */
 button:hover {
@@ -182,8 +147,6 @@ button:hover {
     button {
         font-size: 0.8rem; /* Reducido de 0.9rem a 0.8rem */
         padding: 8px 18px; /* Reducido de 12px 25px a 8px 18px */
-        width: 80%; /* Reducido de 100% a 80% */
-        margin: 10px auto; /* Centrado y añadido margen */
     }
 
     form {

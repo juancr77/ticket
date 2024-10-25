@@ -1,0 +1,121 @@
+/* Importar la fuente retro */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Variables CSS para facilitar cambios de color */
+:root {
+    --color-fondo: #0e1a2b; /* Azul marino */
+    --color-principal: #1e90ff; /* Azul brillante estilo neón */
+    --color-secundario: #87ceeb; /* Azul cielo */
+    --color-texto: #e0e0e0; /* Blanco grisáceo */
+    --color-hover: #104e8b; /* Azul oscuro para hover */
+    --color-borde: #87ceeb; /* Borde azul cielo */
+    --color-focus: #1e90ff; /* Azul vibrante para foco */
+}
+
+/* Estilos generales */
+body {
+    font-family: 'Press Start 2P', cursive; /* Fuente estilo retro-pixel */
+    background-color: var(--color-fondo); /* Fondo oscuro azul marino */
+    color: var(--color-texto); /* Texto blanco grisáceo */
+    margin: 0;
+    padding: 20px; /* Padding para evitar que el contenido toque los bordes */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Evita espacio vertical excesivo */
+    min-height: 100vh;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+/* Título */
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--color-principal); /* Azul brillante estilo neón */
+    text-shadow: 2px 2px #003366, 2px 2px 0px #000000; /* Sombra azul oscuro estilo arcade */
+}
+
+/* Lista de mensajes flash */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 20px 0; /* Margen inferior para separar del contenido */
+}
+
+li {
+    background-color: rgba(30, 144, 255, 0.2); /* Fondo azul semitransparente */
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: #ffffff;
+}
+
+/* Contenedor de datos */
+.container {
+    background-color: #1a2b3c; /* Azul oscuro */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(30, 144, 255, 0.5); /* Sombra azul neón */
+    margin-bottom: 20px;
+    width: 90%;
+    max-width: 400px;
+    border: 3px solid var(--color-principal); /* Borde azul brillante */
+}
+
+/* Estilo de párrafos de datos */
+.container p {
+    font-size: 0.9rem; /* Reducido para una apariencia más compacta */
+    margin: 8px 0; /* Reducido para menos espacio vertical */
+    text-align: left; /* Alineación a la izquierda para mejor legibilidad */
+}
+
+/* Botones de opciones */
+button {
+    font-family: 'Press Start 2P', cursive;
+    background-color: var(--color-principal); /* Azul cian vibrante */
+    color: var(--color-fondo);
+    border: 2px solid var(--color-secundario); /* Borde azul cielo */
+    padding: 15px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%; /* Botón ocupa todo el ancho disponible */
+}
+
+button:hover {
+    background-color: var(--color-hover); /* Azul oscuro */
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(30, 144, 255, 0.7); /* Sombra azul */
+}
+
+/* Estilo responsivo */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+    }
+
+    .container {
+        padding: 20px;
+        max-width: 350px;
+    }
+
+    .container p {
+        font-size: 0.8rem;
+    }
+}
+
+/* Estilo para la accesibilidad */
+button:focus-visible {
+    outline: 3px solid var(--color-principal); /* Resaltado azul */
+    outline-offset: 2px;
+}
