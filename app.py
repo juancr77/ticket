@@ -625,7 +625,7 @@ def dashboard_data():
         return jsonify({'error': 'Ocurrió un error al obtener los datos.'}), 500
 
 ####Cruds#################################################################
-# Ruta para listar y gestionar los estatus
+# Ruta para listar y gestionar los asunto
 @app.route('/asunto', methods=['GET', 'POST'])
 def asunto_crud():
     if 'user_name' not in session:
