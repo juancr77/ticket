@@ -444,51 +444,63 @@ def menu_admin2():
 # Ruta para la consulta, modificación y eliminación de alumnos y tickets@app.route('/consulta_admin', methods=['GET', 'POST'])
 @app.route('/consulta_admin', methods=['GET', 'POST'])
 def consulta_admin():
+    # Verificar si el usuario ha iniciado sesión
     if 'user_name' not in session:
         flash('Debes iniciar sesión primero.', 'warning')
         return redirect(url_for('login'))
 
     session_db = db.get_session()
 
-    if request.method == 'POST':
-        # Obtener datos de búsqueda
-        curp = request.form.get('curp')
-        nombre = request.form.get('nombre')
-        primerApe = request.form.get('primerApe')
+    try:
+        # Obtener todos los municipios y asuntos para los selects
+        municipios = session_db.query(Municipio).all()
+        asuntos = session_db.query(Asunto).all()
 
-        # Si es búsqueda de alumno
-        if curp or (nombre and primerApe):
-            # Buscar al alumno por CURP o por nombre y primer apellido
-            if curp:
-                alumno = session_db.query(Alumno).filter_by(curp=curp).first()
-            elif nombre and primerApe:
-                alumno = session_db.query(Alumno).filter_by(nombre=nombre, primerApe=primerApe).first()
+        # Verificar si no se encuentran municipios o asuntos en la base de datos
+        if not municipios or not asuntos:
+            flash('No hay datos disponibles para municipios o asuntos.', 'danger')
+            # En lugar de redirigir a la misma ruta, renderizamos la plantilla con listas vacías
+            return render_template('consulta_admin.html', alumno=None, ticket=None, municipios=[], asuntos=[])
 
-            # Si se encuentra el alumno, también obtenemos el ticket relacionado
-            if alumno:
-                ticket = session_db.query(Ticket).filter_by(idAlumno=alumno.idAlumno).first()
+        alumno = None
+        ticket = None
 
-                # Obtener todos los municipios y asuntos para los selects
-                municipios = session_db.query(Municipio).all()
-                asuntos = session_db.query(Asunto).all()
+        if request.method == 'POST':
+            # Obtener datos de búsqueda
+            curp = request.form.get('curp').strip()
+            nombre = request.form.get('nombre', '').strip()
+            primerApe = request.form.get('primerApe', '').strip()
 
-                # Verificar si no se encuentran municipios o asuntos en la base de datos
-                if not municipios or not asuntos:
-                    flash('No hay datos disponibles para municipios o asuntos.', 'danger')
-                    session_db.close()
-                    return redirect(url_for('consulta_admin'))
-
-                session_db.close()
-
-                # Renderizamos el formulario de modificación o eliminación, pasando los municipios y asuntos
-                return render_template('consulta_admin.html', alumno=alumno, ticket=ticket, municipios=municipios, asuntos=asuntos)
+            # Validar que al menos uno de los criterios de búsqueda esté presente
+            if not curp and not (nombre and primerApe):
+                flash('Por favor, ingresa al menos un criterio de búsqueda (CURP o Nombre y Primer Apellido).', 'warning')
             else:
-                flash('No se encontró ningún alumno con los datos proporcionados.', 'danger')
-                session_db.close()
-                return redirect(url_for('consulta_admin'))
+                # Si se proporciona CURP, priorizar la búsqueda por CURP
+                if curp:
+                    alumno = session_db.query(Alumno).filter_by(curp=curp).first()
+                elif nombre and primerApe:
+                    alumno = session_db.query(Alumno).filter_by(nombre=nombre, primerApe=primerApe).first()
 
-    return render_template('consulta_admin.html')
+                # Si se encuentra el alumno, obtener el ticket relacionado
+                if alumno:
+                    ticket = session_db.query(Ticket).filter_by(idAlumno=alumno.idAlumno).first()
+                    if not ticket:
+                        flash('El alumno encontrado no tiene un ticket asociado.', 'warning')
+                else:
+                    flash('No se encontró ningún alumno con los datos proporcionados.', 'danger')
 
+    except SQLAlchemyError as e:
+        # Manejo de errores de la base de datos
+        app.logger.error(f"Error en consulta_admin: {e}")
+        flash('Ocurrió un error al procesar tu solicitud. Por favor, intenta nuevamente.', 'danger')
+        alumno = None
+        ticket = None
+    finally:
+        # Asegurarse de cerrar la sesión en cualquier caso
+        session_db.close()
+
+    # Renderizar la plantilla con los datos obtenidos
+    return render_template('consulta_admin.html', alumno=alumno, ticket=ticket, municipios=municipios, asuntos=asuntos)
 
 # Ruta para actualizar alumno y ticket
 @app.route('/actualizar_alumno_ticket/<int:idAlumno>', methods=['POST'])

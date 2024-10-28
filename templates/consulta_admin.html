@@ -57,24 +57,26 @@
         </select>
         <br><br>
 
-        <!-- Select dinámico para municipio -->
-        <label for="idMunicipio">Municipio:</label>
-        <select id="idMunicipio" name="idMunicipio">
-            {% for municipio in municipios %}
-            <option value="{{ municipio.idMunicipio }}" {% if municipio.idMunicipio == ticket.idMunicipio %}selected{% endif %}>{{ municipio.nombreMunicipio }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
+     <!-- Select dinámico para municipio -->
+    <label for="idMunicipio">Municipio:</label>
+    <select id="idMunicipio" name="idMunicipio">
+        <option value="">Seleccione un municipio</option>
+        {% for municipio in municipios %}
+            <option value="{{ municipio.idMunicipio }}" {% if municipio.idMunicipio == ticket.idMunicipio %}selected{% endif %}>{{ municipio.nombreN }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
 
-        <!-- Select dinámico para asunto -->
-        <label for="idAsunto">Asunto:</label>
-        <select id="idAsunto" name="idAsunto">
-            {% for asunto in asuntos %}
-            <option value="{{ asunto.idAsunto }}" {% if asunto.idAsunto == ticket.idAsunto %}selected{% endif %}>{{ asunto.descripcion }}</option>
-            {% endfor %}
-        </select>
-        <br><br>
-
+    <!-- Select dinámico para asunto -->
+    <label for="idAsunto">Asunto:</label>
+    <select id="idAsunto" name="idAsunto">
+        <option value="">Seleccione un asunto</option>
+        {% for asunto in asuntos %}
+            <option value="{{ asunto.idAsunto }}" {% if asunto.idAsunto == ticket.idAsunto %}selected{% endif %}>{{ asunto.asuntoN }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+      
         <button type="submit">Actualizar Alumno y Ticket</button>
     </form>
 

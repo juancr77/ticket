@@ -98,34 +98,61 @@ document.getElementById('registerForm').addEventListener('submit', function (eve
 });
 
 // Definir la función validarFormulario()
+// Definir la función validarFormulario()
 function validarFormulario() {
     const nombre = document.getElementById('nombre').value.trim();
     const primerApe = document.getElementById('primerApe').value.trim();
     const correo = document.getElementById('correo').value.trim();
     const curp = document.getElementById('curp').value.trim();
+    const telefono = document.getElementById('telefono').value.trim(); // Agregar campo de teléfono
 
+    // Validación de campo requerido para nombre
     if (!nombre) {
         Swal.fire('Campo requerido', 'Por favor, ingresa el nombre.', 'warning');
         return false;
-    } else if (!primerApe) {
+    }
+
+    // Validación de campo requerido para primer apellido
+    if (!primerApe) {
         Swal.fire('Campo requerido', 'Por favor, ingresa el primer apellido.', 'warning');
         return false;
-    } else if (!correo) {
+    }
+
+    // Validación de campo requerido y formato para correo electrónico
+    if (!correo) {
         Swal.fire('Campo requerido', 'Por favor, ingresa el correo electrónico.', 'warning');
         return false;
-    } else if (!curp) {
+    } else {
+        const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!correoRegex.test(correo)) {
+            Swal.fire('Formato inválido', 'Por favor, ingresa un correo electrónico válido.', 'warning');
+            return false;
+        }
+    }
+
+    // Validación de campo requerido y formato para CURP
+    if (!curp) {
         Swal.fire('Campo requerido', 'Por favor, ingresa el CURP.', 'warning');
         return false;
+    } else {
+        const curpRegex = /^[A-Z]{4}\d{6}[HM][A-Z]{5}\d{2}$/;
+        if (!curpRegex.test(curp)) {
+            Swal.fire('Formato inválido', 'Por favor, ingresa un CURP válido.', 'warning');
+            return false;
+        }
     }
 
-    // Validar formato del correo electrónico
-    const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!correoRegex.test(correo)) {
-        Swal.fire('Formato inválido', 'Por favor, ingresa un correo electrónico válido.', 'warning');
+    // Validación de campo requerido y formato para teléfono
+    if (!telefono) {
+        Swal.fire('Campo requerido', 'Por favor, ingresa el número de teléfono.', 'warning');
         return false;
+    } else {
+        const telefonoRegex = /^\d{10}$/;
+        if (!telefonoRegex.test(telefono)) {
+            Swal.fire('Formato inválido', 'Por favor, ingresa un número de teléfono válido de 10 dígitos.', 'warning');
+            return false;
+        }
     }
-
-    // Aquí puedes agregar validaciones adicionales, como el formato del CURP
 
     return true;
 }
